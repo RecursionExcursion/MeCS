@@ -6,59 +6,32 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foofinc.MeCS.repository.models.GameDTO;
 import com.foofinc.MeCS.repository.models.SchoolDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DataResolver {
+class DataResolver {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    public static List<SchoolDTO> getTeams(int year) {
+    static List<SchoolDTO> getTeams(int year) {
         String teamsJsonString = DataRetriever.getSchoolsJsonString(year);
-        return mapSchools(teamsJsonString);
+        return mapJsonToObject(teamsJsonString, new TypeReference<>() {});
     }
 
-    private static List<SchoolDTO> mapSchools(String teamsJsonString) {
+    static List<List<GameDTO>> getGames(int year) {
+
+        List<String> allWeeks = new ArrayList<>(DataRetriever.getRegularSeasonWeeksJsonStrings(year));
+        allWeeks.add(DataRetriever.getPostSeasonJsonString(year));
+
+        return allWeeks.stream()
+                       .map(json -> mapJsonToObject(json, new TypeReference<List<GameDTO>>() {}))
+                       .collect(Collectors.toList());
+    }
+
+    private static <T> T mapJsonToObject(String jsonString, TypeReference<T> typeRef) {
         try {
-            return MAPPER.readValue(teamsJsonString, new TypeReference<>() {});
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-//    public static List<List<GameDTO>> getGames(int year) {
-
-//  List<String> regularSeasonWeeksJsonStrings = DataRetriever.getRegularSeasonWeeksJsonStrings(year);
-//        String postSeasonJsonString = DataRetriever.getPostSeasonJsonString(year);
-//        List<List<GameDTO>> seasonGames = new ArrayList<>();
-//
-//        regularSeasonWeeksJsonStrings.forEach(json -> {
-//            List<GameDTO> week = mapWeek(json);
-//            seasonGames.add(week);
-//        });
-//
-//        seasonGames.add(mapWeek(postSeasonJsonString));
-//
-//        return seasonGames;
-//    }
-
-    public static List<List<GameDTO>> getGames(int year) {
-
-        List<String> regularSeasonWeeksJsonStrings = DataRetriever.getRegularSeasonWeeksJsonStrings(year);
-        String postSeasonJsonString = DataRetriever.getPostSeasonJsonString(year);
-
-        List<List<GameDTO>> seasonGames = regularSeasonWeeksJsonStrings.stream()
-                                                                       .map(DataResolver::mapWeek)
-                                                                       .collect(Collectors.toList());
-
-        seasonGames.add(mapWeek(postSeasonJsonString));
-
-        return seasonGames;
-    }
-
-    private static List<GameDTO> mapWeek(String json) {
-        try {
-            return MAPPER.readValue(json, new TypeReference<>() {});
+            return MAPPER.readValue(jsonString, typeRef);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

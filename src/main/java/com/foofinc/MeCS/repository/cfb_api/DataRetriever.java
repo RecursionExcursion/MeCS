@@ -5,7 +5,7 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataRetriever {
+class DataRetriever {
 
     static String getSchoolsJsonString(int year) {
         String schoolsUrl = UrlBuilder.getSchoolsUrl(year);
@@ -29,21 +29,23 @@ public class DataRetriever {
         return seasonWeeksJson;
     }
 
-    public static String getPostSeasonJsonString(int year) {
+    static String getPostSeasonJsonString(int year) {
         String postSeasonUrl = UrlBuilder.getGameStatsUrl(year, 1, UrlConstants.postSeason);
         return getJSONFromAPI(postSeasonUrl);
     }
 
     private static String getJSONFromAPI(String url) {
+        //TODO move bearer?
         String bearer = "gLQdG5n7YtiTjzu/bxxxd+rdzzrhWftHTtIH7PAGVWlAQMOAA7h2ria3ai2Dl9zc";
+        HttpResponse<String> response = getResponse(url, bearer);
+        return response.body();
+    }
 
-        HttpResponse<String> response;
+    private static HttpResponse<String> getResponse(String url, String bearer) {
         try {
-            response = APIAccessor.INSTANCE.accessAPI(url, bearer);
+            return APIAccessor.accessAPI(url, bearer);
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
-
-        return response.body();
     }
 }

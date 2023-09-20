@@ -6,11 +6,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-enum APIAccessor {
+class APIAccessor {
 
-    INSTANCE;
-
-    HttpResponse<String> accessAPI(String url, String bearerToken) throws InterruptedException, IOException {
+    static HttpResponse<String> accessAPI(String url, String bearerToken) throws InterruptedException, IOException {
 
         HttpClient httpClient = HttpClient.newHttpClient();
 
