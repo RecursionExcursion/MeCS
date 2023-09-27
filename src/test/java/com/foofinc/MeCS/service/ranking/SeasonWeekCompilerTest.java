@@ -27,19 +27,37 @@ class SeasonWeekCompilerTest {
 
         List<List<TeamStats>> weeklyTeams = rankedSeason.getWeeklyStats();
 
-        int michTotalOff = 3345 + 3078;
-        int michTotalDef = 1371 + 2719;
+        //TODO Organize Below into separate tests
 
-        TeamStats michFinalWeekStats = weeklyTeams.get(weeklyTeams.size() - 1)
-                                                  .stream()
-                                                  .filter(team -> team.getSchool().getId() == 130)
-                                                  .findFirst()
-                                                  .orElseThrow();
+        //From ESPN
+        int realMichTotalOff = 3345 + 3078;
+        int realMichTotalDef = 1371 + 2719;
 
-        int totalOffense = michFinalWeekStats.getTotalOffense();
-        int totalDefense = michFinalWeekStats.getTotalDefense();
+        //Mich post season stats [0]= Off, [1]= Def
+        int[] michStats = getTotalYards(weeklyTeams.get(weeklyTeams.size() - 1), 130);
 
-        assertEquals(michTotalOff, totalOffense, 1);
-        assertEquals(michTotalDef, totalDefense, 1);
+        assertEquals(realMichTotalOff, michStats[0], 1);
+        assertEquals(realMichTotalDef, michStats[1], 1);
+
+
+        //From ESPN
+        int realGeorgiaTotalOff = 7517;
+        int realGeorgiaTotalDef = 4452;
+
+        int[] georgiaStats = getTotalYards(weeklyTeams.get(weeklyTeams.size() - 1), 61);
+
+        assertEquals(realGeorgiaTotalOff, georgiaStats[0], 1);
+        assertEquals(realGeorgiaTotalDef, georgiaStats[1], 1);
+    }
+
+    private static int[] getTotalYards(List<TeamStats> teamStatsWeek, int teamId) {
+
+        TeamStats teamStats = teamStatsWeek
+                .stream()
+                .filter(team -> team.getSchool().getId() == teamId)
+                .findFirst()
+                .orElseThrow();
+
+        return new int[]{teamStats.getTotalOffense(), teamStats.getTotalDefense()};
     }
 }
