@@ -88,8 +88,7 @@ public class SeasonWeekCompiler {
                                  currentTeam.getPoints() > oppTeam.getPoints()
             );
         } catch (RuntimeException e) {
-            String errorMessage = String.format("%s, game id- %s", e, game.getId());
-            throw new RuntimeException(errorMessage);
+            return MissingGameData.getGameData(game, currentTeam);
         }
     }
 
@@ -99,16 +98,14 @@ public class SeasonWeekCompiler {
                 return Integer.parseInt(stat.getStat());
             }
         }
-        String errorMessage = String.format("Yards could not be found for %s (id- %s)",
-                                            team.getSchool(), team.getSchoolId());
-        throw new RuntimeException(errorMessage);
+        throw new RuntimeException();
     }
 
-    private record GameStats(int totalOffense,
-                             int totalDefense,
-                             int pointsFor,
-                             int pointsAllowed,
-                             boolean win) {}
+    public record GameStats(int totalOffense,
+                            int totalDefense,
+                            int pointsFor,
+                            int pointsAllowed,
+                            boolean win) {}
 
     private static void addStats(TeamStats teamStats, GameStats gameStats) {
 

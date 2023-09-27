@@ -10,7 +10,9 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 
-@ContextConfiguration(classes = { TeamsRepository.class})
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ContextConfiguration(classes = {TeamsRepository.class})
 @WebMvcTest
 class SeasonWeekCompilerTest {
 
@@ -24,5 +26,20 @@ class SeasonWeekCompilerTest {
         RankedSeason rankedSeason = SeasonWeekCompiler.compileSeason(seasonData);
 
         List<List<TeamStats>> weeklyTeams = rankedSeason.getWeeklyStats();
+
+        int michTotalOff = 3345 + 3078;
+        int michTotalDef = 1371 + 2719;
+
+        TeamStats michFinalWeekStats = weeklyTeams.get(weeklyTeams.size() - 1)
+                                                  .stream()
+                                                  .filter(team -> team.getSchool().getId() == 130)
+                                                  .findFirst()
+                                                  .orElseThrow();
+
+        int totalOffense = michFinalWeekStats.getTotalOffense();
+        int totalDefense = michFinalWeekStats.getTotalDefense();
+
+        assertEquals(michTotalOff, totalOffense, 1);
+        assertEquals(michTotalDef, totalDefense, 1);
     }
 }
