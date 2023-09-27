@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GameDTO {
 
-    private long id;
-    private TeamDTO[] teams;
+    protected long id;
+    protected TeamDTO[] teams;
 
     public GameDTO(long id, TeamDTO[] teams) {
         this.id = id;

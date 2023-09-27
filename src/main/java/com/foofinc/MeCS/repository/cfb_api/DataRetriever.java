@@ -1,5 +1,7 @@
 package com.foofinc.MeCS.repository.cfb_api;
 
+import com.foofinc.MeCS.util.AppProps;
+
 import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
@@ -35,9 +37,7 @@ class DataRetriever {
     }
 
     private static String getJSONFromAPI(String url) {
-        //TODO move bearer?
-        String bearer = "gLQdG5n7YtiTjzu/bxxxd+rdzzrhWftHTtIH7PAGVWlAQMOAA7h2ria3ai2Dl9zc";
-        HttpResponse<String> response = getResponse(url, bearer);
+        HttpResponse<String> response = getResponse(url, AppProps.getBearerToken());
         return response.body();
     }
 

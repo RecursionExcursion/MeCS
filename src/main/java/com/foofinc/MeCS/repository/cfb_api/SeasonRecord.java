@@ -5,4 +5,4 @@ import com.foofinc.MeCS.repository.models.SchoolDTO;
 
 import java.util.List;
 
-public record Season(List<SchoolDTO> teams, List<List<GameDTO>> weeks) {}
+public record SeasonRecord(List<SchoolDTO> teams, List<List<GameDTO>> weeks) {}
