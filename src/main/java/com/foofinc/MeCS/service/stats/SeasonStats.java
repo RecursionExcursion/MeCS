@@ -1,12 +1,11 @@
-package com.foofinc.MeCS.service.ranking;
+package com.foofinc.MeCS.service.stats;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RankedSeason {
+public class SeasonStats {
 
     private final List<List<TeamStats>> weeklyStats = new ArrayList<>();
-
 
     public List<List<TeamStats>> getWeeklyStats() {
         return weeklyStats;

@@ -1,4 +1,4 @@
-package com.foofinc.MeCS.service.ranking;
+package com.foofinc.MeCS.service.stats;
 
 import com.foofinc.MeCS.repository.models.GameDTO;
 import com.foofinc.MeCS.repository.models.SchoolDTO;

@@ -1,4 +1,4 @@
-package com.foofinc.MeCS.service.ranking;
+package com.foofinc.MeCS.service.stats;
 
 import com.foofinc.MeCS.repository.models.GameDTO;
 import com.foofinc.MeCS.repository.models.StatsDTO;
@@ -8,45 +8,33 @@ import com.foofinc.MeCS.service.season.SeasonData;
 import java.util.List;
 import java.util.Optional;
 
-public class SeasonWeekCompiler {
+public class SeasonStatCompiler {
 
-    //TODO Data copy works but needs to be tested
-
-
-    public static RankedSeason compileSeason(SeasonData seasonData) {
+    public static SeasonStats compileSeason(SeasonData seasonData) {
 
         List<TeamStats> teamStats = seasonData.getSchools().stream()
                                               .map(TeamStats::new)
                                               .toList();
 
-        RankedSeason rankedSeason = new RankedSeason();
+        SeasonStats seasonStats = new SeasonStats();
 
-        //TODO Here to view in debugging, delete
-//        List<List<TeamStats>> weeklyStats = RankedSeason.getWeeklyTeams();
-
-//        for (List<GameDTO> games : regularSeason) {
-//            List<TeamStats> weekStats = compileWeek(games, teamStats);
-//            rankedSeason.addWeek(weekStats);
-//            //TODO Why is this here? To carry over information?
-//            teamStats = new ArrayList<>(weekStats);
-//        }
         //Regular Season
         for (List<GameDTO> games : seasonData.getRegularSeason()) {
             teamStats = compileWeek(games, teamStats);
-            rankedSeason.addWeek(teamStats);
+            seasonStats.addWeek(teamStats);
         }
 
         //Post Season
         teamStats = compileWeek(seasonData.getPostSeason(), teamStats);
-        rankedSeason.addWeek(teamStats);
+        seasonStats.addWeek(teamStats);
 
-        return rankedSeason;
+        return seasonStats;
     }
 
     private static List<TeamStats> compileWeek(List<GameDTO> games, List<TeamStats> teamStats) {
 
         //Creates copy of week
-        List<TeamStats> newTeamStats = RankedSeason.copyWeek(teamStats);
+        List<TeamStats> newTeamStats = SeasonStats.copyWeek(teamStats);
 
         for (GameDTO game : games) {
 
@@ -101,18 +89,12 @@ public class SeasonWeekCompiler {
         throw new RuntimeException();
     }
 
-    public record GameStats(int totalOffense,
-                            int totalDefense,
-                            int pointsFor,
-                            int pointsAllowed,
-                            boolean win) {}
-
     private static void addStats(TeamStats teamStats, GameStats gameStats) {
 
-        teamStats.addToTotalOffense(gameStats.totalOffense);
-        teamStats.addToTotalDefense(gameStats.totalDefense);
-        teamStats.addToPointsAllowed(gameStats.pointsAllowed);
-        teamStats.addToPointsFor(gameStats.pointsFor);
+        teamStats.addToTotalOffense(gameStats.totalOffense());
+        teamStats.addToTotalDefense(gameStats.totalDefense());
+        teamStats.addToPointsAllowed(gameStats.pointsAllowed());
+        teamStats.addToPointsFor(gameStats.pointsFor());
 
         if (gameStats.win()) {
             teamStats.getSchedule().incWins();

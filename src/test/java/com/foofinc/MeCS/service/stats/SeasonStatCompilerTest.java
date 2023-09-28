@@ -1,4 +1,4 @@
-package com.foofinc.MeCS.service.ranking;
+package com.foofinc.MeCS.service.stats;
 
 import com.foofinc.MeCS.repository.TeamsRepository;
 import com.foofinc.MeCS.repository.cfb_api.SeasonRecord;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ContextConfiguration(classes = {TeamsRepository.class})
 @WebMvcTest
-class SeasonWeekCompilerTest {
+class SeasonStatCompilerTest {
 
     @Autowired
     private TeamsRepository repository;
@@ -23,27 +23,23 @@ class SeasonWeekCompilerTest {
     void compileSeason() {
         SeasonRecord season = repository.getSeason(2022);
         SeasonData seasonData = new SeasonData(season);
-        RankedSeason rankedSeason = SeasonWeekCompiler.compileSeason(seasonData);
+        SeasonStats seasonStats = SeasonStatCompiler.compileSeason(seasonData);
 
-        List<List<TeamStats>> weeklyTeams = rankedSeason.getWeeklyStats();
+        List<List<TeamStats>> weeklyTeams = seasonStats.getWeeklyStats();
 
         //TODO Organize Below into separate tests
 
         //From ESPN
-        int realMichTotalOff = 3345 + 3078;
-        int realMichTotalDef = 1371 + 2719;
-
+        int realMichTotalOff = 3345 + 3078, realMichTotalDef = 1371 + 2719;
         //Mich post season stats [0]= Off, [1]= Def
         int[] michStats = getTotalYards(weeklyTeams.get(weeklyTeams.size() - 1), 130);
 
         assertEquals(realMichTotalOff, michStats[0], 1);
         assertEquals(realMichTotalDef, michStats[1], 1);
 
-
         //From ESPN
-        int realGeorgiaTotalOff = 7517;
-        int realGeorgiaTotalDef = 4452;
-
+        int realGeorgiaTotalOff = 7517, realGeorgiaTotalDef = 4452;
+        //Georgia post season stats [0]= Off, [1]= Def
         int[] georgiaStats = getTotalYards(weeklyTeams.get(weeklyTeams.size() - 1), 61);
 
         assertEquals(realGeorgiaTotalOff, georgiaStats[0], 1);

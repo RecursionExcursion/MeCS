@@ -2,7 +2,7 @@ package com.foofinc.MeCS.service;
 
 import com.foofinc.MeCS.repository.TeamsRepository;
 import com.foofinc.MeCS.repository.cfb_api.SeasonRecord;
-import com.foofinc.MeCS.service.ranking.SeasonWeekCompiler;
+import com.foofinc.MeCS.service.stats.SeasonStatCompiler;
 import com.foofinc.MeCS.service.season.SeasonData;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class TeamsService {
     private void getSeason(int year) {
         SeasonRecord seasonRecord = repository.getSeason(year);
         SeasonData seasonData = new SeasonData(seasonRecord);
-        SeasonWeekCompiler.compileSeason(seasonData);
+        SeasonStatCompiler.compileSeason(seasonData);
         //TODO Stopped here
     }
 }
