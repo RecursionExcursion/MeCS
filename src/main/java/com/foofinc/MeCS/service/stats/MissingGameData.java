@@ -1,4 +1,4 @@
-package com.foofinc.MeCS.service.ranking;
+package com.foofinc.MeCS.service.stats;
 
 import com.foofinc.MeCS.repository.models.GameDTO;
 import com.foofinc.MeCS.repository.models.TeamDTO;
@@ -7,7 +7,7 @@ public class MissingGameData {
 
     private final static long AkronVsBuffalo2022GameId = 401506450;
 
-    public static SeasonWeekCompiler.GameStats getGameData(GameDTO game, TeamDTO currentTeam) {
+    public static GameStats getGameData(GameDTO game, TeamDTO currentTeam) {
 
         if (game.getId() == AkronVsBuffalo2022GameId) {
             return AkronVsBuffalo2022(game, currentTeam);
@@ -16,8 +16,7 @@ public class MissingGameData {
         throw new RuntimeException(String.format("No data for game - %s", game.getId()));
     }
 
-
-    private static SeasonWeekCompiler.GameStats AkronVsBuffalo2022(GameDTO game, TeamDTO currentTeam) {
+    private static GameStats AkronVsBuffalo2022(GameDTO game, TeamDTO currentTeam) {
         //Away
         int akronId = 2006;
         int akronYards = 306;
@@ -28,8 +27,8 @@ public class MissingGameData {
         int buffaloScore = 23;
 
         MissingGame missingGame = MissingGame.Builder.builder()
-                                               .withAwayStats(akronScore, akronYards)
-                                               .withHomeStats(buffaloScore, buffaloYards).build();
+                                                     .withAwayStats(akronScore, akronYards)
+                                                     .withHomeStats(buffaloScore, buffaloYards).build();
 
         if (currentTeam.getSchoolId() == buffaloId) {
             return missingGame.getHomeGameStats();
@@ -55,20 +54,20 @@ public class MissingGameData {
             homeScore = builder.homeScore;
         }
 
-        SeasonWeekCompiler.GameStats getHomeGameStats() {
-            return new SeasonWeekCompiler.GameStats(homeYards,
-                                                    awayYards,
-                                                    homeScore,
-                                                    awayScore,
-                                                    homeScore > awayScore);
+        GameStats getHomeGameStats() {
+            return new GameStats(homeYards,
+                                 awayYards,
+                                 homeScore,
+                                 awayScore,
+                                 homeScore > awayScore);
         }
 
-        SeasonWeekCompiler.GameStats getAwayGameStats() {
-            return new SeasonWeekCompiler.GameStats(awayYards,
-                                                    homeYards,
-                                                    awayScore,
-                                                    homeScore,
-                                                    awayScore > homeScore);
+        GameStats getAwayGameStats() {
+            return new GameStats(awayYards,
+                                 homeYards,
+                                 awayScore,
+                                 homeScore,
+                                 awayScore > homeScore);
         }
 
         public static final class Builder {
