@@ -24,36 +24,56 @@ class SeasonStatCompilerTest {
         SeasonRecord season = repository.getSeason(2022);
         SeasonData seasonData = new SeasonData(season);
         SeasonStats seasonStats = SeasonStatCompiler.compileSeason(seasonData);
-
         List<List<TeamStats>> weeklyTeams = seasonStats.getWeeklyStats();
 
-        //TODO Organize Below into separate tests
-
         //From ESPN
-        int realMichTotalOff = 3345 + 3078, realMichTotalDef = 1371 + 2719;
-        //Mich post season stats [0]= Off, [1]= Def
-        int[] michStats = getTotalYards(weeklyTeams.get(weeklyTeams.size() - 1), 130);
+        Stats realMichStats = new Stats(3345 + 3078, 1371 + 2719,
+                                        566, 225,
+                                        13, 1, 14);
 
-        assertEquals(realMichTotalOff, michStats[0], 1);
-        assertEquals(realMichTotalDef, michStats[1], 1);
+        Stats realGeorgiaStats = new Stats(7517, 4452,
+                                           616, 214,
+                                           15, 0, 15);
 
-        //From ESPN
-        int realGeorgiaTotalOff = 7517, realGeorgiaTotalDef = 4452;
-        //Georgia post season stats [0]= Off, [1]= Def
-        int[] georgiaStats = getTotalYards(weeklyTeams.get(weeklyTeams.size() - 1), 61);
+        //Post season stats
+        Stats michStats = getStats(weeklyTeams.get(weeklyTeams.size() - 1), 130);
+        Stats georgiaStats = getStats(weeklyTeams.get(weeklyTeams.size() - 1), 61);
 
-        assertEquals(realGeorgiaTotalOff, georgiaStats[0], 1);
-        assertEquals(realGeorgiaTotalDef, georgiaStats[1], 1);
+        teamsAreEqual(realMichStats, michStats);
+        teamsAreEqual(realGeorgiaStats, georgiaStats);
     }
 
-    private static int[] getTotalYards(List<TeamStats> teamStatsWeek, int teamId) {
+    private static Stats getStats(List<TeamStats> teamStatsWeek, int teamId) {
+        return new Stats(findTeam(teamStatsWeek, teamId));
+    }
 
-        TeamStats teamStats = teamStatsWeek
+    private static TeamStats findTeam(List<TeamStats> teamStatsWeek, int teamId) {
+        return teamStatsWeek
                 .stream()
                 .filter(team -> team.getSchool().getId() == teamId)
                 .findFirst()
                 .orElseThrow();
+    }
 
-        return new int[]{teamStats.getTotalOffense(), teamStats.getTotalDefense()};
+    private record Stats(int totalOffense, int totalDefense,
+                         int pointsFor, int pointsAllowed,
+                         int wins, int losses,
+                         int gamesPlayed) {
+
+        private Stats(TeamStats teamStats) {
+            this(teamStats.getTotalOffense(), teamStats.getTotalDefense(),
+                 teamStats.getPointsFor(), teamStats.getPointsAllowed(),
+                 teamStats.getWins(), teamStats.getLosses(),
+                 teamStats.getNumberOfGamesPlayed()
+            );
+        }
+    }
+
+    private void teamsAreEqual(Stats team1, Stats team2) {
+        assertEquals(team1.totalOffense, team2.totalOffense,1);
+        assertEquals(team1.totalDefense, team2.totalDefense,1);
+        assertEquals(team1.wins, team2.wins);
+        assertEquals(team1.losses, team2.losses);
+        assertEquals(team1.gamesPlayed, team2.gamesPlayed);
     }
 }

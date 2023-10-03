@@ -2,8 +2,12 @@ package com.foofinc.MeCS.service;
 
 import com.foofinc.MeCS.repository.TeamsRepository;
 import com.foofinc.MeCS.repository.cfb_api.SeasonRecord;
+import com.foofinc.MeCS.service.ranking.RankingFacade;
+import com.foofinc.MeCS.service.ranking.RankingParams;
+import com.foofinc.MeCS.service.ranking.SeasonRankings;
 import com.foofinc.MeCS.service.stats.SeasonStatCompiler;
 import com.foofinc.MeCS.service.season.SeasonData;
+import com.foofinc.MeCS.service.stats.SeasonStats;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,14 +20,20 @@ public class TeamsService {
     }
 
     public String getTeams() {
-        getSeason(2022);
         return "Teams";
     }
 
-    private void getSeason(int year) {
+    public SeasonRankings getRankings(RankingParams rankingParams) {
+
+        SeasonStats seasonStats = compileSeason(rankingParams.getYear());
+        SeasonRankings seasonRankings = new RankingFacade().rankSeason(seasonStats, rankingParams);
+
+        return seasonRankings;
+    }
+
+    private SeasonStats compileSeason(int year) {
         SeasonRecord seasonRecord = repository.getSeason(year);
         SeasonData seasonData = new SeasonData(seasonRecord);
-        SeasonStatCompiler.compileSeason(seasonData);
-        //TODO Stopped here
+        return SeasonStatCompiler.compileSeason(seasonData);
     }
 }

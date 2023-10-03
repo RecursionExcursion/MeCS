@@ -11,7 +11,7 @@ public class SeasonStats {
         return weeklyStats;
     }
 
-    public void addWeek(List<TeamStats> week) {
+    void addWeek(List<TeamStats> week) {
         weeklyStats.add(week);
     }
 

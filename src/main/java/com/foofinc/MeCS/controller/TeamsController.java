@@ -1,6 +1,8 @@
 package com.foofinc.MeCS.controller;
 
 import com.foofinc.MeCS.service.TeamsService;
+import com.foofinc.MeCS.service.ranking.RankingParams;
+import com.foofinc.MeCS.service.ranking.SeasonRankings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +21,15 @@ public class TeamsController {
 
     @GetMapping("/teams")
     public ResponseEntity<String> getTeams(){
+        return new ResponseEntity<>("teams", HttpStatusCode.valueOf(200));
+    }
 
-        String teams = service.getTeams();
+    @GetMapping(value = "/rankings", consumes = "application/json")
+    public ResponseEntity<SeasonRankings> getRankedTeams(@RequestBody RankingParams rankingParams) {
 
-        return new ResponseEntity<>(teams, HttpStatusCode.valueOf(200));
+        SeasonRankings rankings = service.getRankings(rankingParams);
+
+        return new ResponseEntity<>(rankings, HttpStatusCode.valueOf(200));
     }
 
     @ExceptionHandler(RuntimeException.class)

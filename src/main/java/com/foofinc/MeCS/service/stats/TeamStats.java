@@ -39,11 +39,7 @@ public class TeamStats {
     public TeamStats(TeamStats oldTeam) {
         this.school = oldTeam.school;
         this.rank = 0;
-        this.schedule = new Schedule(
-                new ArrayList<>(oldTeam.getSchedule().getGamesPlayed()),
-                oldTeam.getSchedule().getWins(),
-                oldTeam.getSchedule().getLosses()
-        );
+        this.schedule = new Schedule(oldTeam.schedule);
         this.totalOffense = oldTeam.getTotalOffense();
         this.totalDefense = oldTeam.getTotalDefense();
         this.pointsAllowed = oldTeam.getPointsAllowed();
@@ -60,12 +56,44 @@ public class TeamStats {
         return rank;
     }
 
+    public Double getWeight() {
+        return weight;
+    }
+
     public Schedule getSchedule() {
         return schedule;
     }
 
-    public Double getWeight() {
-        return weight;
+    public int getWins() {
+        return schedule.getWins();
+    }
+
+    public int getLosses() {
+        return schedule.getLosses();
+    }
+
+    public int getTotalOffense() {
+        return totalOffense;
+    }
+
+    public int getTotalDefense() {
+        return totalDefense;
+    }
+
+    public int getPointsAllowed() {
+        return pointsAllowed;
+    }
+
+    public int getPointsFor() {
+        return pointsFor;
+    }
+
+    public int getNumberOfGamesPlayed() {
+        return schedule.gamesPlayed.size();
+    }
+
+    public int getStrengthOfSchedule() {
+        return strengthOfSchedule;
     }
 
     /*Adder Methods*/
@@ -85,18 +113,13 @@ public class TeamStats {
         this.pointsFor += pointsFor;
     }
 
+    public void addWeight(int addedWeight) {
+        weight += addedWeight;
+    }
 
     /*
-    Getter Methods- Method names are tightly coupled to Ranking Algo Strings
+    PG Getter Methods
      */
-    public int getWins() {
-        return schedule.getWins();
-    }
-
-    public int getLosses() {
-        return schedule.getLosses();
-    }
-
     public double getPointsForPerGame() {
         return (double) pointsFor / schedule.gamesPlayed.size();
     }
@@ -113,35 +136,11 @@ public class TeamStats {
         return (double) totalDefense / schedule.gamesPlayed.size();
     }
 
-    public int getTotalOffense() {
-        return totalOffense;
-    }
-
-    public int getTotalDefense() {
-        return totalDefense;
-    }
-
-    public int getPointsAllowed() {
-        return pointsAllowed;
-    }
-
-    public int getPointsFor() {
-        return pointsFor;
-    }
-
-    public int getGamesPlayed() {
-        return schedule.gamesPlayed.size();
-    }
-
     public double getStrengthOfSchedulePerGame() {
         if (strengthOfSchedule == -1.0) {
             throw new IllegalStateException("Strength of Schedule has not been calculated");
         }
-        return (double) strengthOfSchedule / getGamesPlayed();
-    }
-
-    public int getStrengthOfSchedule() {
-        return strengthOfSchedule;
+        return (double) strengthOfSchedule / getNumberOfGamesPlayed();
     }
 
     /*
@@ -159,22 +158,22 @@ public class TeamStats {
         this.weight = weight;
     }
 
-
     public static class Schedule {
 
-        private List<GameDTO> gamesPlayed = new ArrayList<>();
+        private final List<GameDTO> gamesPlayed;
         private int wins;
         private int losses;
 
-        Schedule() {
+        private Schedule() {
             wins = 0;
             losses = 0;
+            gamesPlayed = new ArrayList<>();
         }
 
-        public Schedule(List<GameDTO> gamesPlayed, int wins, int loses) {
-            this.wins = wins;
-            this.losses = loses;
-            this.gamesPlayed = gamesPlayed;
+        private Schedule(Schedule schedule) {
+            this.wins = schedule.wins;
+            this.losses = schedule.losses;
+            this.gamesPlayed = new ArrayList<>(schedule.gamesPlayed);
         }
 
         public List<GameDTO> getGamesPlayed() {
@@ -191,6 +190,17 @@ public class TeamStats {
 
         public int getLosses() {
             return losses;
+        }
+
+        public double getWinRate() {
+
+            if (gamesPlayed.size() != wins + losses) {
+                String message = String.format("Schedule has %s present, but Wins + Losses = %s",
+                                         gamesPlayed.size(), wins + losses);
+                throw new RuntimeException(message);
+            }
+
+            return ((double) wins / (wins + losses));
         }
 
         public void incWins() {
