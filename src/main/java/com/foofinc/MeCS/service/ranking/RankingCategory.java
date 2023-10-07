@@ -1,6 +1,6 @@
 package com.foofinc.MeCS.service.ranking;
 
-public enum RankingCategory {
+enum RankingCategory {
 
     WINS,
     LOSSES,
@@ -9,9 +9,10 @@ public enum RankingCategory {
 
     OFFENSE_PG,
     DEFENSE_PG,
+
     POINTS_FOR_PG,
     POINTS_ALLOWED_PG,
 
     POLL_INERTIA,
     STRENGTH_OF_SCHEDULE;
-    }
+}

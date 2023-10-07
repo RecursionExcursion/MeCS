@@ -26,7 +26,7 @@ public class TeamsService {
     public SeasonRankings getRankings(RankingParams rankingParams) {
 
         SeasonStats seasonStats = compileSeason(rankingParams.getYear());
-        SeasonRankings seasonRankings = new RankingFacade().rankSeason(seasonStats, rankingParams);
+        SeasonRankings seasonRankings = new RankingFacade(seasonStats, rankingParams).rankSeason();
 
         return seasonRankings;
     }

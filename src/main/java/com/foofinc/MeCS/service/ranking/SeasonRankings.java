@@ -7,7 +7,7 @@ import java.util.List;
 
 public class SeasonRankings {
 
-    private List<List<TeamStats>> rankedWeeks = new ArrayList<>();
+    private final List<List<TeamStats>> rankedWeeks = new ArrayList<>();
 
     public List<List<TeamStats>> getRankedWeeks() {
         return rankedWeeks;

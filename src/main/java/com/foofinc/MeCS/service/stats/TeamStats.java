@@ -64,10 +64,12 @@ public class TeamStats {
         return schedule;
     }
 
+    //Used for Reflection in TeamStatsReflectionManager
     public int getWins() {
         return schedule.getWins();
     }
 
+    //Used for Reflection in TeamStatsReflectionManager
     public int getLosses() {
         return schedule.getLosses();
     }
@@ -120,18 +122,26 @@ public class TeamStats {
     /*
     PG Getter Methods
      */
+    public double getWinsPerGame(){
+        return schedule.getWinRate();
+    }
+
+    //Used for Reflection in TeamStatsReflectionManager
     public double getPointsForPerGame() {
         return (double) pointsFor / schedule.gamesPlayed.size();
     }
 
+    //Used for Reflection in TeamStatsReflectionManager
     public double getPointsAllowedPerGame() {
         return (double) pointsAllowed / schedule.gamesPlayed.size();
     }
 
+    //Used for Reflection in TeamStatsReflectionManager
     public double getOffensePerGame() {
         return (double) totalOffense / schedule.gamesPlayed.size();
     }
 
+    //Used for Reflection in TeamStatsReflectionManager
     public double getDefensePerGame() {
         return (double) totalDefense / schedule.gamesPlayed.size();
     }

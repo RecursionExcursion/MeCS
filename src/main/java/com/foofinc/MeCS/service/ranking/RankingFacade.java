@@ -3,40 +3,44 @@ package com.foofinc.MeCS.service.ranking;
 import com.foofinc.MeCS.service.stats.SeasonStats;
 import com.foofinc.MeCS.service.stats.TeamStats;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class RankingFacade {
 
+    private final SeasonStats seasonStats;
+    private final RankingParams rankingParams;
 
-    public SeasonRankings rankSeason(SeasonStats seasonStats, RankingParams rankingParams) {
+    public RankingFacade(SeasonStats seasonStats, RankingParams rankingParams) {
+        this.seasonStats = seasonStats;
+        this.rankingParams = rankingParams;
+    }
 
-        RankedSeasonStats rankedSeasonStats = StatRanker.calculateStatRanksForEachWeek(seasonStats);
+    public SeasonRankings rankSeason() {
+        WeightCalculator weightCalculator = new WeightCalculator(seasonStats, rankingParams);
 
-        calculateWeight(rankedSeasonStats, rankingParams.getWinWeight());
+        //Teams are now being weighted off base stats
+        List<List<TeamStats>> initialWeights = weightCalculator.calculateBaseWeights();
+
+        //Teams are now being ranked off base stats
+        List<List<TeamStats>> baseWeightRankings = rankBaseWeights(initialWeights);
+
+        //Calc poll inertia
+
+        //Calc Strength of Schedule
+
         return null;
     }
 
-    private void applyWeight(RankedSeasonStats rankedSeasonStats, RankingParams rankingParams) {
+    private static List<List<TeamStats>> rankBaseWeights(List<List<TeamStats>> season) {
+        List<List<TeamStats>> copy = new ArrayList<>();
 
-    }
+//        for (List<TeamStats> week : season) {
+//            List<TeamStats> rankedWeek = StatRanker.sortTeamsAgainstWeight(week);
+//            copy.add(rankedWeek);
+//        }
 
-    private void calculateWeight(RankedSeasonStats rankedSeasonStats, int paramWeight) {
-
-        List<Map<RankingCategory, List<TeamStats>>> weeksInSeason = rankedSeasonStats.getWeeksInSeason();
-
-        for (Map<RankingCategory, List<TeamStats>> statMap : weeksInSeason) {
-            int currentWeight = 1;
-            int statStandard = -1;
-            for (TeamStats team : statMap.get(RankingCategory.OFFENSE_PG)) {
-                if (statStandard == -1) {
-                    statStandard = team.getWins();
-                }
-                if (team.getWins() == statStandard) {
-                    currentWeight++;
-                }
-                team.addWeight(currentWeight * paramWeight);
-            }
-        }
+        season.forEach(week -> copy.add(StatRanker.sortTeamsAgainstWeight(week)));
+        return copy;
     }
 }
