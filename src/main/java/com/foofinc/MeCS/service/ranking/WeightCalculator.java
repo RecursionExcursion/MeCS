@@ -47,6 +47,17 @@ class WeightCalculator {
         return weightedSeason;
     }
 
+    public void calculatePollInertiaWeight() {
+
+        seasonStats.getWeeklyStats()
+
+
+    }
+
+    public void calculateStrengthOfSchedule() {
+
+    }
+
     private void calculateWeight(Method method, RankingCategory rankingCategory) {
 
         int paramWeight = getParamWeight(rankingCategory);
@@ -106,4 +117,6 @@ class WeightCalculator {
         }
         return weightMultiplier;
     }
+
+
 }

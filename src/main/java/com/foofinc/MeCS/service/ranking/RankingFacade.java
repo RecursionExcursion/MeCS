@@ -25,10 +25,11 @@ public class RankingFacade {
         //Teams are now being ranked off base stats
         List<List<TeamStats>> baseWeightRankings = rankBaseWeights(initialWeights);
 
-        //Calc poll inertia
+        //Calc poll inertia weight
+        weightCalculator.calculatePollInertiaWeight();
 
         //Calc Strength of Schedule
-
+        weightCalculator.calculateStrengthOfSchedule();
         return null;
     }
 
