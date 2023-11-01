@@ -36,6 +36,11 @@ class DataRetriever {
         return getJSONFromAPI(postSeasonUrl);
     }
 
+    static String getPreSeasonRankings(int year){
+        String preseasonRankingsUrl = UrlBuilder.getPreseasonRankings(year);
+        return getJSONFromAPI(preseasonRankingsUrl);
+    }
+
     private static String getJSONFromAPI(String url) {
         HttpResponse<String> response = getResponse(url, AppProps.getBearerToken());
         return response.body();

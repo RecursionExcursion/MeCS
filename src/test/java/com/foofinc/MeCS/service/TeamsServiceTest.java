@@ -34,6 +34,7 @@ class TeamsServiceTest {
                                  1, 1,
                                  1, 1,
                                  1, 1,
-                                 1, 1);
+                                 1, 1,
+                                 false);
     }
 }

@@ -16,6 +16,8 @@ public class RankingParams {
     private int pollInertiaWeight;
     private int scheduleStrengthWeight;
 
+    private boolean usePreseasonRankings;
+
     public RankingParams() {}
 
     public RankingParams(int year,
@@ -26,7 +28,8 @@ public class RankingParams {
                          int pointsForWeight,
                          int pointsAllowedWeight,
                          int pollInertiaWeight,
-                         int scheduleStrengthWeight) {
+                         int scheduleStrengthWeight,
+                         boolean usePreseasonRankings) {
         this.year = year;
         this.winWeight = winWeight;
         this.lossWeight = lossWeight;
@@ -36,6 +39,7 @@ public class RankingParams {
         this.pointsAllowedWeight = pointsAllowedWeight;
         this.pollInertiaWeight = pollInertiaWeight;
         this.scheduleStrengthWeight = scheduleStrengthWeight;
+        this.usePreseasonRankings = usePreseasonRankings;
     }
 
     public int getYear() {
@@ -108,5 +112,13 @@ public class RankingParams {
 
     public void setScheduleStrengthWeight(int scheduleStrengthWeight) {
         this.scheduleStrengthWeight = scheduleStrengthWeight;
+    }
+
+    public boolean isUsePreseasonRankings() {
+        return usePreseasonRankings;
+    }
+
+    public void setUsePreseasonRankings(boolean usePreseasonRankings) {
+        this.usePreseasonRankings = usePreseasonRankings;
     }
 }

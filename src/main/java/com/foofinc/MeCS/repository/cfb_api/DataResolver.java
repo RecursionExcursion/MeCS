@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foofinc.MeCS.repository.models.GameDTO;
+import com.foofinc.MeCS.repository.models.RankingsDTO;
 import com.foofinc.MeCS.repository.models.SchoolDTO;
 
 import java.util.ArrayList;
@@ -27,6 +28,11 @@ class DataResolver {
         return allWeeks.stream()
                        .map(json -> mapJsonToObject(json, new TypeReference<List<GameDTO>>() {}))
                        .collect(Collectors.toList());
+    }
+
+    static List<RankingsDTO> getPreseasonRankings(int year) {
+        String preSeasonRankingsJsonString = DataRetriever.getPreSeasonRankings(year);
+        return mapJsonToObject(preSeasonRankingsJsonString, new TypeReference<>() {});
     }
 
     private static <T> T mapJsonToObject(String jsonString, TypeReference<T> typeRef) {

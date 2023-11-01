@@ -49,9 +49,15 @@ class WeightCalculator {
 
     public void calculatePollInertiaWeight() {
 
-        seasonStats.getWeeklyStats()
+        List<List<TeamStats>> weeklyStats = seasonStats.getWeeklyStats();
 
+        int i = rankingParams.isUsePreseasonRankings() ? 0 : 1;
 
+        for (; i < weeklyStats.size(); i++) {
+
+        }
+
+        System.out.println();
     }
 
     public void calculateStrengthOfSchedule() {
